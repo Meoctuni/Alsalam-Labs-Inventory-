@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{d}/documents {
+    match /items/{i} {
+      allow read: if true;
+      allow create, update: if request.resource.data.name is string && request.resource.data.name.size() < 200
+        && request.resource.data.lots is list && request.resource.data.lots.size() < 300;
+      allow delete: if true;
+    }
+    match /logs/{l} {
+      allow read: if true;
+      allow create: if request.resource.data.name is string && request.resource.data.name.size() < 200
+        && request.resource.data.delta is number;
+      allow delete: if true;
+    }
+  }
+}
